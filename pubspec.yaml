@@ -1,0 +1,22 @@
+name: captcha_verification
+description: "A Flutter package for verifying the captcha from user for better security"
+version: 0.0.1
+homepage:
+repository: https://github.com/flutterwings304/captcha_verification
+
+environment:
+  sdk: '>=3.2.3 <4.0.0'
+  flutter: ">=1.17.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
+
+flutter:
+
+
