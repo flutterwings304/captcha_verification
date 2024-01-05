@@ -14,15 +14,31 @@ class CaptchaVerification extends StatefulWidget {
           border: OutlineInputBorder(),
           hintText: "Enter Captcha Value",
           labelText: "Enter Captcha Value"),
-      this.labelStyle = const TextStyle(),
+      this.labelStyle = const TextStyle(
+        fontWeight: FontWeight.w500,
+        fontSize: 20,
+      ),
       this.refreshWidget = const Icon(Icons.refresh),
-      this.captchaStyle = const TextStyle(fontWeight: FontWeight.w500),
+      this.captchaStyle = const TextStyle(
+          decoration: TextDecoration.lineThrough,
+          letterSpacing: -1,
+          fontSize: 24,
+          fontStyle: FontStyle.italic),
       this.labelText = "Enter Captcha Value",
       this.errorText = "Please enter the value you see on the screen",
+      this.errorStyle = const TextStyle(fontSize: 18, color: Colors.red),
       required this.onVerified,
       this.verifiedWidget = const Row(
         mainAxisAlignment: MainAxisAlignment.start,
-        children: [Icon(Icons.verified), SizedBox(width: 5,), Text("Verified")],
+        children: [
+          Icon(Icons.verified),
+          SizedBox(
+            width: 5,
+          ),
+          Text(
+            "Verified",
+          )
+        ],
       )})
       : super(key: key);
 
@@ -37,6 +53,9 @@ class CaptchaVerification extends StatefulWidget {
 
   ///Captcha label textstyle
   final TextStyle labelStyle;
+
+  ///Captcha Error textstyle
+  final TextStyle errorStyle;
 
   ///Widget that need to show for refreshing the captcha
   final Widget refreshWidget;
@@ -82,74 +101,79 @@ class _CaptchaVerificationState extends State<CaptchaVerification> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+        body: Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            widget.labelText,
+            style: widget.labelStyle,
+          ),
+          const SizedBox(
+            width: 10,
+          ),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: widget.containerDecoration,
+                child: Text(
+                  randomString,
+                  style: widget.captchaStyle,
+                ),
+              ),
+              const SizedBox(
+                width: 10,
+              ),
+              IconButton(
+                onPressed: () {
+                  buildCaptcha();
+                },
+                icon: widget.refreshWidget,
+              ),
+              const SizedBox(
+                width: 10,
+              ),
+              Expanded(
+                child: TextFormField(
+                  onChanged: (value) {
+                    setState(() {
+                      isVerified = false;
+                      typedValue = value;
+                    });
+                  },
+                  decoration: widget.textFieldDecoration,
+                ),
+              ),
+              const SizedBox(
+                width: 10,
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  isVerified = typedValue == randomString;
+                  setState(() {});
+                  widget.onVerified(isVerified);
+                },
+                child: const Text("Verify"),
+              ),
+            ],
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          if (isVerified)
+            widget.verifiedWidget
+          else
             Text(
-              widget.labelText,
-              style: widget.labelStyle,
+              widget.errorText,
+              style: widget.errorStyle,
             ),
-            const SizedBox(
-              width: 10,
-            ),
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: widget.containerDecoration,
-                  child: Text(
-                    randomString,
-                    style: widget.captchaStyle,
-                  ),
-                ),
-                const SizedBox(
-                  width: 10,
-                ),
-                IconButton(
-                  onPressed: () {
-                    buildCaptcha();
-                  },
-                  icon: widget.refreshWidget,
-                ),
-                const SizedBox(
-                  width: 10,
-                ),
-                Expanded(
-                  child: TextFormField(
-                    onChanged: (value) {
-                      setState(() {
-                        isVerified = false;
-                        typedValue = value;
-                      });
-                    },
-                    decoration: widget.textFieldDecoration,
-                  ),
-                ),
-                const SizedBox(
-                  width: 10,
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    isVerified = typedValue == randomString;
-                    setState(() {});
-                    widget.onVerified(isVerified);
-                  },
-                  child: const Text("Verify"),
-                ),
-              ],
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            if (isVerified) widget.verifiedWidget else Text(widget.errorText),
-          ],
-        ),
+        ],
       ),
-    );
+    ));
   }
 }
